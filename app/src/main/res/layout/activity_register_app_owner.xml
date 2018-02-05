@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dat153.nameapp.RegisterAppOwnerActivity">
+
+    <TextView
+        android:id="@+id/AddAppOwnerTextView"
+        android:layout_width="123dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="80dp"
+        android:labelFor="@id/ownerNameEditTextField"
+        android:text="@string/mandatory_field"
+        app:layout_constraintBottom_toTopOf="@+id/ownerNameEditTextField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/ownerNameEditTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="96dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AddAppOwnerTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/default_value_app_owner_name" />
+
+    <Button
+        android:id="@+id/AddAppOwnerButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="160dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="151dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/accent_material_light_1"
+        android:contentDescription="@string/button"
+        android:text="@string/add_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ownerNameEditTextField"
+        app:layout_constraintVertical_bias="0.508" />
+
+
+
+
+</android.support.constraint.ConstraintLayout>

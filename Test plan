@@ -1,0 +1,75 @@
+Test plan document
+______________________________________________
+
+The following needs to be tested in the app
+LOOK AT: https://developer.android.com/studio/test/index.html
+----------------------------------------------
+
+# Test 1: Set name of user
+Required pre-conditions:
+        -> App owner not registered. 
+Expected results:
+        -> Asked to enter owners name
+        -> Add name to shared preference
+        -> Assert that named is stored in shared preferences.
+
+
+
+# Test 2: Instrument test on camera
+Required pre-conditions:
+        ->
+Expected results:
+        ->
+
+# Test 3: Functionality test on DAO/DB
+Required pre-conditions:
+        -> Empty DB
+Expected results:
+        -> Assert empty
+        -> Ability to add attributes/tuples to the DB
+        -> Ability to remove attributes/tuples from the DB
+
+
+# Test 4: Instrumented test on list of students clicked
+Required pre-conditions:
+        -> Student names are inserted into the ListView
+Expected results:
+        -> New intent displays the correct name and picture of the student name that is clicked
+
+
+# Test 5: Instrumented test on checking if the selected name in the learning game is correct
+Required pre-conditions:
+        -> ImageView containing students picture and spinner that includes the students name
+Expected results:
+        -> Assert that the correct answer is equal to the correctly guessed name selected from the spinner
+        -> Assert that the correct answer is not equal to the wrongly guessed name selected from the spinner
+
+
+# Test 6: JUnit test on checking that the correctly/wrongly guesses name in learning mode displays the correct color output
+Required pre-conditions:
+        -> A studentname to be chosen from a spinner (the spinner will change color)
+Expected results:
+        -> Assert that the correct answer gives the spinner a green color
+        -> Assert that the wrong answer gives the spinner a red color
+
+
+# Test 7: Instrumented test on checking that student is added to the DB in AddStudentActivity
+Required pre-conditions:
+        -> This student is not yet registered
+Expected results:
+        -> Valid information to be inserted to DB
+        -> Student is added sucsessfully to the DB
+
+
+# Test 8: Instrumented test on checking that the camera request permission is valid
+Required pre-conditions:
+        -> Permission for using camera is not already given.
+Expected results:
+        -> Permission request appears if the user has not granted permission yet.
+
+
+# Test 9: Instrumented test on checking if the gallery updates when student is added to the DB
+Required pre-conditions:
+        -> Already existing ListView with associated adapter.
+Expected results:
+        -> After student is added to the adapter (and adapter to the view) the list is updated with this student.

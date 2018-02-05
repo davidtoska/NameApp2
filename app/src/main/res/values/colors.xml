@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="red">#ff404d</color>
+    <color name="green">#1ab732</color>
+    <color name="grey">#747474</color>
+    <color name="blue">#e8fcff</color>
+    <color name="primary_material_light_1">#f5f5f5</color>
+    <color name="primary_button">#95e1fa</color>
+    <color name="accent_material_light_1">#009688</color>
+</resources>
