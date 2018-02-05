@@ -20,7 +20,7 @@ public class ApplicationUtils {
 
     /**
      * Method that fetches image from internal storage and decodes it to a bitmap
-     * @param ImgName name of image
+     *
      * @return a bitmap
      */
     /*public static Bitmap decodeImage(Context context, String ImgName){

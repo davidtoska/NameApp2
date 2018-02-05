@@ -50,7 +50,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         return listItemView;
     }
 
-    public Bitmap decodeImage(String ImgName){
+    private Bitmap decodeImage(String ImgName){
         Bitmap bitmap;
         String pattern = "\\d*";
 

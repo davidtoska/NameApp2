@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             isAppInit = false;
         } else {
             boolean isTooShort = validName(appOwnerName);
-            boolean isDefault = (appOwnerName.equals(R.string.default_value_app_owner_name));
+            boolean isDefault = (appOwnerName.equals(String.valueOf(R.string.default_value_app_owner_name)));
             isAppInit = isTooShort || isDefault;
         }
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private final AppDatabase mDb;
 

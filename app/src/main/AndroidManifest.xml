@@ -54,6 +54,10 @@
             android:name=".RegisterAppOwnerActivity"
             android:label="SettingsActivityLabel"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/help_title"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

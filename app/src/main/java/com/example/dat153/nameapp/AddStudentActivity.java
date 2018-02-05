@@ -177,7 +177,7 @@ public class AddStudentActivity extends AppCompatActivity {
             finish();
 
         } else {
-            Toast.makeText(this, R.string.name_not_valid, Toast.LENGTH_SHORT);
+            Toast.makeText(this, R.string.name_not_valid, Toast.LENGTH_SHORT).show();
             firstName.setHint(R.string.first_name);
             lastName.setHint(R.string.last_name);
         }

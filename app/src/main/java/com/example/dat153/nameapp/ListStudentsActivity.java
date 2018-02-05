@@ -96,7 +96,7 @@ public class ListStudentsActivity extends AppCompatActivity {
         }
     }
 
-    private class LoadAllUsersTask extends AsyncTask<Void, Void, List<User>> {
+    private static class LoadAllUsersTask extends AsyncTask<Void, Void, List<User>> {
         private final AppDatabase mDb;
 
         public LoadAllUsersTask(AppDatabase db) {

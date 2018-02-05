@@ -50,7 +50,7 @@ public class GalleryActivity extends AppCompatActivity {
     /**
      *  Ayncs anonoymous class for fetching a
      */
-    private class GetStudentsTask extends AsyncTask<Void, Void, List<User>> {
+    private static class GetStudentsTask extends AsyncTask<Void, Void, List<User>> {
         private final AppDatabase mDb;
 
         public GetStudentsTask(AppDatabase db) {
