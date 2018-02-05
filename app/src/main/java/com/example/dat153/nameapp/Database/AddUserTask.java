@@ -7,6 +7,7 @@ import android.os.AsyncTask;
  */
 
 
+/*
 public class AddUserTask extends AsyncTask<User, Void,Void> {
 
     private final AppDatabase mDb;
@@ -21,3 +22,4 @@ public class AddUserTask extends AsyncTask<User, Void,Void> {
         return null;
     }
 }
+*/

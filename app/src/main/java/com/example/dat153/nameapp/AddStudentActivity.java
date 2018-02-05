@@ -8,17 +8,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.dat153.nameapp.Database.AddUserTask;
 import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.User;
 
@@ -131,19 +132,24 @@ public class AddStudentActivity extends AppCompatActivity {
                 bitmapImage = (Bitmap) extras.get("data");
             }
             ImgPreview.setImageBitmap(bitmapImage);
+            ImgName = this.GeneretePictureName();
         }
         // If user wants to choose from gallery
         if(requestCode == CHOOSE_FROM_GALLERY && resultCode == RESULT_OK){
             ImgURI = data.getData();
             try {
                 bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), ImgURI);
+                Log.d("encodeImg: ", bitmapImage.toString());
                 ImgPreview = findViewById(R.id.ImgPreview);
                 ImgPreview.setImageBitmap(bitmapImage);
+                ImgName = this.GeneretePictureName();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.error_message, Toast.LENGTH_LONG).show();
             }
         }
+
 
         // Save bitmap to image
         encodeImage(ImgName, bitmapImage);
@@ -172,7 +178,9 @@ public class AddStudentActivity extends AppCompatActivity {
         EditText lastName = findViewById(R.id.inputLastName);
 
         String name = firstName.getText() + " " + lastName.getText();
+
         if(validName(name)) {
+            Log.d("encodeImg: ", String.valueOf(ImgName));
             addStudentToDB(name);
             finish();
 
@@ -203,6 +211,7 @@ public class AddStudentActivity extends AppCompatActivity {
         byte[] byteArray = stream.toByteArray();
 
         try {
+            Log.d("encodeImg: ", ImgName);
             FileOutputStream fos = openFileOutput(ImgName, Context.MODE_PRIVATE);
             fos.write(byteArray);
             fos.close();
@@ -292,6 +301,25 @@ public class AddStudentActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Add student to DB.
+     */
+    private static class AddUserTask extends AsyncTask<User, Void,Void> {
+
+        private final AppDatabase mDb;
+
+        public AddUserTask(AppDatabase db) {
+            mDb = db;
+        }
+
+        @Override
+        protected Void doInBackground(User... users) {
+            mDb.userDao().insertUser(users[0]);
+            return null;
+        }
+    }
+
     public void setImgName(String imageName){
         this.ImgName = imageName;
     }
@@ -299,4 +327,7 @@ public class AddStudentActivity extends AppCompatActivity {
     public void setBitmapImage(Bitmap image){
         this.bitmapImage = image;
     }
+
+
+
 }

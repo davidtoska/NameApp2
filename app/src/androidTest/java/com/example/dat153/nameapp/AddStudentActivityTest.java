@@ -6,6 +6,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.test.InstrumentationRegistry;
@@ -40,6 +41,7 @@ import android.support.test.uiautomator.UiSelector;
 
 import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.LoadAllNamesTask;
+import com.example.dat153.nameapp.Database.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,4 +191,6 @@ public class AddStudentActivityTest {
         String fullName = mFirstName.concat(" " + mLastName);
         return fullName;
     }
+
+
 }
