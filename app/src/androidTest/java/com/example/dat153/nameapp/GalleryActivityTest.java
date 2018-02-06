@@ -23,7 +23,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
 /**
- * Created by cecilie on 02.02.2018.
+ * Created by internal_cecilie on 02.02.2018.
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest

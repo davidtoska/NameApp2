@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,7 +37,7 @@ import static android.transition.Fade.IN;
 
 /**
  * Class that runs the learning game.
- * @author cecilie
+ * @author internal_cecilie
  */
 
 public class LearningModeActivity extends AppCompatActivity {
@@ -124,7 +126,7 @@ public class LearningModeActivity extends AppCompatActivity {
             enableSpinner();
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
             randomStudent = getRandomStudent();
-            imageView.setImageBitmap(decodeImage(randomStudent.getImgName()));
+            imageView.setImageBitmap(decodeImage(randomStudent.getImgPath(), 1000));
             fadeIn(imageView);
 
         } else {
@@ -134,23 +136,25 @@ public class LearningModeActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    public Bitmap decodeImage(String ImgName){
-        Bitmap bitmap;
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+        Bitmap thumbImage = null;
         String pattern = "\\d*";
 
-        if(ImgName.matches(pattern)){
-            // Image is in resources
-            Log.d("SE HER SE HER", "ImgName: " + ImgName);
-            int res = Integer.parseInt(ImgName);
-            Log.d("SE HER SE HER", "int: " + res);
-            BitmapDrawable temp = (BitmapDrawable) this.getApplicationContext().getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
+        Uri uri = Uri.parse(imgPath);
+        Log.d("URI", uri.toString());
+        Log.d("imgPath", imgPath.toString());
+
+        if(imgPath.matches(pattern)) {
+            int res = Integer.parseInt(imgPath);
+            BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
+            Log.d("MAKING THUMBNAIL OF", uri.toString());
+            thumbImage = ThumbnailUtils.extractThumbnail(temp.getBitmap(), THUMBSIZE, THUMBSIZE);
         }
-        else{
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
+        else {
+            thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.toString()),
+                    THUMBSIZE, THUMBSIZE);
         }
-        return bitmap;
+        return thumbImage;
     }
 
     /**

@@ -4,9 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,7 +38,6 @@ public class GalleryActivity extends AppCompatActivity {
 
         try {
             users = new GetStudentsTask(mDb).execute().get();
-            Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -71,23 +73,6 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-    }
-
-    public Bitmap decodeImage(String ImgName){
-        Bitmap bitmap;
-        String pattern = "\\d*";
-
-        if(ImgName.matches(pattern)){
-            // Image is in resources
-            int res = Integer.parseInt(ImgName);
-            BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
-        }
-        else{
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
-        }
-        return bitmap;
     }
 
 }

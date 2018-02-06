@@ -16,12 +16,12 @@ public class User {
     @PrimaryKey
     private String name;
 
-    private String imgName;
+    private String imgPath;
 
     @Ignore
-    public User(@NonNull String name, String imgName) {
+    public User(@NonNull String name, String imgPath) {
         this.name = name;
-        this.imgName = imgName;
+        this.imgPath = imgPath;
     }
 
     public User() {
@@ -36,11 +36,11 @@ public class User {
         this.name = name;
     }
 
-    public String getImgName() {
-        return imgName;
+    public String getImgPath() {
+        return imgPath;
     }
 
-    public void setImgName(String imgName) {
-        this.imgName = imgName;
+    public void setImgPath(String imgName) {
+        this.imgPath = imgName;
     }
 }

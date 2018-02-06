@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +20,11 @@ import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.R;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
+import java.io.FileOutputStream;
 import java.util.List;
 
 /**
- * Created by david on 02.02.2018.
+ * Created by internal_david on 02.02.2018.
  */
 
 public class UserAdapter extends ArrayAdapter<User> {
@@ -43,28 +47,32 @@ public class UserAdapter extends ArrayAdapter<User> {
         TextView userNameTextView = listItemView.findViewById(R.id.student_name);
         ImageView userImageView = listItemView.findViewById(R.id.student_image);
         if(thisUser != null){
-            userImageView.setImageBitmap(decodeImage(thisUser.getImgName()));
+            userImageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
             userNameTextView.setText(thisUser.getName());
         }
 
         return listItemView;
     }
 
-    private Bitmap decodeImage(String ImgName){
-        Bitmap bitmap;
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+        Bitmap thumbImage = null;
         String pattern = "\\d*";
 
-        if(ImgName.matches(pattern)){
-            // Image is in resources
-            int res = Integer.parseInt(ImgName);
+        Uri uri = Uri.parse(imgPath);
+        Log.d("URI", uri.toString());
+        Log.d("imgPath", imgPath.toString());
+
+        if(imgPath.matches(pattern)) {
+            int res = Integer.parseInt(imgPath);
             BitmapDrawable temp = (BitmapDrawable) this.getContext().getApplicationContext().getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
+            Log.d("MAKING THUMBNAIL OF", uri.toString());
+            thumbImage = ThumbnailUtils.extractThumbnail(temp.getBitmap(), THUMBSIZE, THUMBSIZE);
         }
-        else{
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
+        else {
+            thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.toString()),
+                    THUMBSIZE, THUMBSIZE);
         }
-        return bitmap;
+        return thumbImage;
     }
 
 }

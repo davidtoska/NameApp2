@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.support.v7.app.AppCompatActivity;
@@ -46,25 +48,30 @@ public class ViewStudentActivity extends AppCompatActivity {
         }
         //User thisUser = mDb.userDao().loadUserByName(name);
         ImageView imageView = findViewById(R.id.imageView);
-        imageView.setImageBitmap(decodeImage(thisUser.getImgName()));
+        imageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
         TextView textView = findViewById(R.id.textView2);
         textView.setText(name);
     }
 
-    public Bitmap decodeImage(String ImgName) {
-        Bitmap bitmap;
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+        Bitmap thumbImage = null;
         String pattern = "\\d*";
 
-        if (ImgName.matches(pattern)) {
-            // Image is in resources
-            int res = Integer.parseInt(ImgName);
+        Uri uri = Uri.parse(imgPath);
+        Log.d("URI", uri.toString());
+        Log.d("imgPath", imgPath.toString());
+
+        if(imgPath.matches(pattern)) {
+            int res = Integer.parseInt(imgPath);
             BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
-        } else {
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
+            Log.d("MAKING THUMBNAIL OF", uri.toString());
+            thumbImage = ThumbnailUtils.extractThumbnail(temp.getBitmap(), THUMBSIZE, THUMBSIZE);
         }
-        return bitmap;
+        else {
+            thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.toString()),
+                    THUMBSIZE, THUMBSIZE);
+        }
+        return thumbImage;
     }
 
         /**
@@ -88,4 +95,4 @@ public class ViewStudentActivity extends AppCompatActivity {
                 return user;
             }
         }
-    }
+}

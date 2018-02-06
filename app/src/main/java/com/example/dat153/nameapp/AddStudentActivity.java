@@ -7,11 +7,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +27,11 @@ import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.User;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import static com.example.dat153.nameapp.validators.StringValidator.validName;
@@ -52,6 +57,9 @@ public class AddStudentActivity extends AppCompatActivity {
 
     // URI for the image
     private Uri ImgURI;
+
+    // Path to image
+    private String imgPath;
 
     // Bitmap image of the student
     private Bitmap bitmapImage;
@@ -114,9 +122,36 @@ public class AddStudentActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            File image = createFile();
+            if (image != null) {
+                Uri imageURI = FileProvider.getUriForFile(this, "com.example.dat153.nameapp.fileprovider", image);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
+    /**
+     * Metod creating the image file
+     * @return
+     */
+    public File createFile(){
+        String fileName = GeneretePictureName();
+
+        File fileDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try{
+            image = File.createTempFile(fileName,/* suffix */ String.valueOf(fileDir)/* directory */);
+            imgPath = image.getAbsolutePath();
+        }
+        catch(Exception e){
+            Log.d("IOerror", "File not created");
+        }
+        return image;
+    }
+
 
     /**
      * @param requestCode int representing what type of request
@@ -126,33 +161,28 @@ public class AddStudentActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Preview of image
-            Bundle extras = data.getExtras();
-            if (extras != null) {
-                bitmapImage = (Bitmap) extras.get("data");
-            }
-            ImgPreview.setImageBitmap(bitmapImage);
-            ImgName = this.GeneretePictureName();
-        }
-        // If user wants to choose from gallery
-        if(requestCode == CHOOSE_FROM_GALLERY && resultCode == RESULT_OK){
             ImgURI = data.getData();
             try {
                 bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), ImgURI);
-                Log.d("encodeImg: ", bitmapImage.toString());
-                ImgPreview = findViewById(R.id.ImgPreview);
                 ImgPreview.setImageBitmap(bitmapImage);
-                ImgName = this.GeneretePictureName();
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.error_message, Toast.LENGTH_LONG).show();
             }
         }
 
-
-        // Save bitmap to image
-        encodeImage(ImgName, bitmapImage);
+        // If user wants to choose from gallery
+        if(requestCode == CHOOSE_FROM_GALLERY && resultCode == RESULT_OK){
+            ImgURI = data.getData();
+            try {
+                bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), ImgURI);
+                ImgPreview.setImageBitmap(bitmapImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.error_message, Toast.LENGTH_LONG).show();
+            }
+            imgPath = ImgURI.getPath();
+        }
     }
 
 
@@ -164,7 +194,7 @@ public class AddStudentActivity extends AppCompatActivity {
     @NonNull
     private String GeneretePictureName() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy-hh/mm", Locale.GERMAN);
-        return IMG_PATH + sdf.toString() + IMG_PATH_JPG;
+        return (IMG_PATH + sdf.toString() + IMG_PATH_JPG).toLowerCase();
     }
 
     /**
@@ -193,54 +223,10 @@ public class AddStudentActivity extends AppCompatActivity {
 
     protected void addStudentToDB(String name){
         // Create the student and place him/her in the collection.
-        User usr = new User(name, ImgName);
+        User usr = new User(name, imgPath);
 
         //Adding the new user with an asyncTask
         new AddUserTask(mDb).execute(usr);
-    }
-
-    // TODO:  vurder å flytt dette ut
-
-    /**
-     * Method that creates the image file in the format jpg and stores it on internal storage
-     * @param ImgName name of picture
-     */
-    public void encodeImage(String ImgName, Bitmap bitmap){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        try {
-            Log.d("encodeImg: ", ImgName);
-            FileOutputStream fos = openFileOutput(ImgName, Context.MODE_PRIVATE);
-            fos.write(byteArray);
-            fos.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Method that fetches image from internal storage and decodes it to a bitmap
-     * @param ImgName name of image
-     * @return a bitmap
-     */
-    public Bitmap decodeImage(String ImgName){
-        Bitmap bitmap = null;
-        String pattern = "\\d*";
-
-        if(ImgName.matches(pattern)){
-            // Image is in resources
-            int res = Integer.parseInt(ImgName);
-            BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
-        }
-        else{
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
-        }
-        return bitmap;
     }
 
     /**
@@ -320,8 +306,8 @@ public class AddStudentActivity extends AppCompatActivity {
         }
     }
 
-    public void setImgName(String imageName){
-        this.ImgName = imageName;
+    public void setImgPath(String imageName){
+        this.imgPath = imageName;
     }
 
     public void setBitmapImage(Bitmap image){
