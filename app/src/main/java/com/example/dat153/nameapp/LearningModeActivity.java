@@ -21,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.example.dat153.nameapp.Database.AppDatabase;
-import com.example.dat153.nameapp.Database.LoadAllNamesTask;
-import com.example.dat153.nameapp.Database.LoadAllUsersTask;
 import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
@@ -95,7 +93,7 @@ public class LearningModeActivity extends AppCompatActivity {
     private static class GetStudentsTask extends AsyncTask<Void, Void, List<User>> {
         private final AppDatabase mDb;
 
-        public GetStudentsTask(AppDatabase db) {
+        GetStudentsTask(AppDatabase db) {
             mDb = db;
         }
 

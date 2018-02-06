@@ -15,7 +15,7 @@ import static com.example.dat153.nameapp.validators.StringValidator.validName;
 
 public class RegisterAppOwnerActivity extends AppCompatActivity {
 
-//    private final String TAG = getResources().getString(R.string.register_name);
+    private final String TAG = "RegAppOwner";
 //    private final String PACKAGE_NAME = getApplicationContext().getPackageName();
 
     @Override
@@ -37,10 +37,11 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
             }
         });
 
+        //Get name of owner if excists (null otherwise)
         String name = getOwnersName();
         if(name != null){
             EditText editText = findViewById(R.id.ownerNameEditTextField);
-            if(editText != null && validName(editText.getText().toString())){
+            if(editText != null && validName(name)){
                 editText.setText(name);
             }
         }
@@ -52,19 +53,25 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         String ownersName = ownerNameEditTextField.getText().toString();
         SharedPreferences sharedPreferences = this.getSharedPreferences(
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
-        Log.d("RegisterAppOw: ", " : " + ownersName);
+        Log.d(TAG, " : " + ownersName);
         sharedPreferences.edit().putString(String.valueOf(R.string.key_app_owner_name), ownersName).apply();
         Toast.makeText(this, getResources().getString(R.string.name_saved), Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Retrives the owners name from shared preferences if registered.
+     * Null othervise.
+     * @return String og null.
+     */
     public String getOwnersName(){
+        String ownersName = null;
         SharedPreferences sharedPreferences = this.getSharedPreferences(
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
-
-        String name = sharedPreferences.getString(
-                String.valueOf(R.string.key_app_owner_name), null);
-
-        return name;
+        if(sharedPreferences != null){
+            ownersName = sharedPreferences.getString(
+                    String.valueOf(R.string.key_app_owner_name), null);
+        }
+        return ownersName;
     }
 
 }

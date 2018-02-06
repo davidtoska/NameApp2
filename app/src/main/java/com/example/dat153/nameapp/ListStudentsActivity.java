@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.dat153.nameapp.Database.AppDatabase;
-import com.example.dat153.nameapp.Database.LoadAllNamesTask;
 import com.example.dat153.nameapp.Database.User;
 
 import java.util.ArrayList;
@@ -111,6 +110,23 @@ public class ListStudentsActivity extends AppCompatActivity {
             }
             Log.d("doinbackground: ", "users: " + users.size());
             return users;
+        }
+    }
+
+
+
+    private static class LoadAllNamesTask extends AsyncTask<Void, Void, List<String>> {
+        private final AppDatabase mDb;
+
+        LoadAllNamesTask(AppDatabase mDb) {
+            this.mDb = mDb;
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            List<String> res;
+            res = mDb.userDao().loadAllUserNames();
+            return res;
         }
     }
 }

@@ -16,14 +16,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.dat153.nameapp.Database.AppDatabase;
-import com.example.dat153.nameapp.Database.DatabaseInitializer;
-import com.example.dat153.nameapp.Database.LoadAllNamesTask;
-import com.example.dat153.nameapp.Database.LoadAllUsersTask;
 import com.example.dat153.nameapp.Database.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.dat153.nameapp.validators.StringValidator.validName;
 
@@ -185,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         private final AppDatabase mDb;
 
 
-        public PopulateDbAsyncTask(AppDatabase db) {
+        PopulateDbAsyncTask(AppDatabase db) {
             this.mDb = db;
         }
 

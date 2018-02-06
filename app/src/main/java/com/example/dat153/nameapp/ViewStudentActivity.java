@@ -71,10 +71,10 @@ public class ViewStudentActivity extends AppCompatActivity {
         /**
          * Loads all user from the database.
          */
-        public static class LoadUserByName extends AsyncTask<String, Void, User> {
+        private static class LoadUserByName extends AsyncTask<String, Void, User> {
             private final AppDatabase mDb;
 
-            public LoadUserByName(AppDatabase db) {
+            LoadUserByName(AppDatabase db) {
                 mDb = db;
             }
 
