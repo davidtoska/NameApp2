@@ -43,10 +43,11 @@ public class MainActivityTest {
 
     @Test
     public void testViewsVisible_views(){
-        onView(withId(R.id.button)).check(matches(isDisplayed()));
-        onView(withId(R.id.button2)).check(matches(isDisplayed()));
-        onView(withId(R.id.button3)).check(matches(isDisplayed()));
+        onView(withId(R.id.AddAppOwnerTextView)).check(matches(isDisplayed()));
+        onView(withId(R.id.ownerNameEditTextField)).check(matches(isDisplayed()));
+        onView(withId(R.id.AddAppOwnerTextView)).check(matches(isDisplayed()));
     }
+
     /**
      * Test that gets you directed to the RegisterAppOwnerActivity if not registered key_app_owner_name in shared preferences.
      */

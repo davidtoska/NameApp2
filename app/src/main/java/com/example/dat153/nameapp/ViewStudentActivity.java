@@ -47,6 +47,7 @@ public class ViewStudentActivity extends AppCompatActivity {
         //User thisUser = mDb.userDao().loadUserByName(name);
         ImageView imageView = findViewById(R.id.imageView);
         imageView.setImageBitmap(decodeImage(thisUser.getImgName()));
+        imageView.setTag(name);
         TextView textView = findViewById(R.id.textView2);
         textView.setText(name);
     }
