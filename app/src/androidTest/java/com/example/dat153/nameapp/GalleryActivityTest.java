@@ -6,9 +6,7 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.dat153.nameapp.Database.AddUserTask;
 import com.example.dat153.nameapp.Database.AppDatabase;
-import com.example.dat153.nameapp.Database.User;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -49,8 +47,8 @@ public class GalleryActivityTest {
 
     @Test
     public void testAddedStudentScenario() throws NullPointerException, InterruptedException {
-        Thread.sleep(2000);
-        assertEquals(mActivityRule.getActivity().getAdapter().getCount(), 3);
+
+        assertEquals(mActivityRule.getActivity().getAdapter().getCount(), 5);
 
         mActivityRule.getActivity().finish();
     }

@@ -64,7 +64,7 @@ public class LearningModeActivity extends AppCompatActivity {
 
         try {
             allStudents = new LearningModeActivity.GetStudentsTask(mDb).execute().get();
-            Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -119,11 +119,11 @@ public class LearningModeActivity extends AppCompatActivity {
     public void runGame(View view){
         if(!allStudents.isEmpty()){
             ImageView imageView = findViewById(R.id.imageView2);
-         
+
             fadeOut(imageView);
             enableSpinner();
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
-            randomStudent = getRandomStudent();
+            randomStudent = fetchRandomStudent();
             imageView.setImageBitmap(decodeImage(randomStudent.getImgName()));
             fadeIn(imageView);
 
@@ -221,7 +221,7 @@ public class LearningModeActivity extends AppCompatActivity {
      * Gets a random student from the list
      * @return random student
      */
-    public User getRandomStudent(){
+    public User fetchRandomStudent(){
         int randomIndex = mRandom.nextInt(allStudents.size());
         User rs = allStudents.get(randomIndex);
         // index that stores the later removal of the index if user guesses correctly
@@ -259,5 +259,13 @@ public class LearningModeActivity extends AppCompatActivity {
 
     public int getGameScore(){
         return gameScore;
+    }
+
+    public User getRandomStudent(){
+        return randomStudent;
+    }
+
+    public Spinner getSpinner(){
+        return spinner;
     }
 }
