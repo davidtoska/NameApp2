@@ -54,7 +54,7 @@
     <string name="button">Button</string>
     <string name="edit_textview_description">This is an editText</string>
     <string name="mandatory_field">Mandatory field</string>
-    <string name="add_name">Add name</string>
+    <string name="add_name">Add owner</string>
     <string name="name_not_valid">Enter a valid name</string>
 
     <!-- help section -->
