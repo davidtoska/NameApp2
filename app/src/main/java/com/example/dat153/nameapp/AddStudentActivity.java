@@ -44,6 +44,8 @@ import static com.example.dat153.nameapp.validators.StringValidator.validName;
  */
 public class AddStudentActivity extends AppCompatActivity {
 
+    private final String TAG = "AddStudentAct";
+
     // Unique code for requesting the capture of a image
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -237,6 +239,7 @@ public class AddStudentActivity extends AppCompatActivity {
     protected void addStudentToDB(String name){
         // Create the student and place him/her in the collection.
         User usr = new User(name, imgPath);
+        Log.d(TAG, "imgPath" + imgPath);
 
         //Adding the new user with an asyncTask
         new AddUserTask(mDb).execute(usr);
@@ -308,7 +311,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
         private final AppDatabase mDb;
 
-        public AddUserTask(AppDatabase db) {
+        AddUserTask(AppDatabase db) {
             mDb = db;
         }
 
