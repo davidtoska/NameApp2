@@ -1,6 +1,7 @@
 package com.example.dat153.nameapp;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -227,6 +228,15 @@ public class AddStudentActivity extends AppCompatActivity {
         if(validName(name)) {
             Log.d("encodeImg: ", String.valueOf(ImgName));
             addStudentToDB(name);
+
+            // Potensial fix to get the list updated
+            try {
+                Intent intent = new Intent(this, ListStudentsActivity.class);
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.error_message, Toast.LENGTH_SHORT).show();
+            }
             finish();
 
         } else {
