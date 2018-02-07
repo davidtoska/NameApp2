@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         private final AppDatabase mDb;
 
 
-        public PopulateDbAsyncTask(AppDatabase db) {
+        PopulateDbAsyncTask(AppDatabase db) {
             this.mDb = db;
         }
 

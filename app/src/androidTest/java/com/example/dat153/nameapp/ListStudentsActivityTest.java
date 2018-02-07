@@ -44,7 +44,7 @@ public class ListStudentsActivityTest {
 
     @Before
     public void before(){
-        mStudToShow = "Thomas Reite";
+        mStudToShow = "Ola Nordmann";
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ListStudentsActivityTest {
                 .perform(click());
 
         onView(withText(mStudToShow)).check(matches(isDisplayed()));
-        // TODO: weird way to check that the tag is corresponding to the student we chose, but works..
-        onView(allOf(withId(R.id.imageView), withTagValue(is((Object) mStudToShow)))).check(matches(withTagValue(is((Object)mStudToShow))));
+        onView(allOf(withId(R.id.imageView), withTagValue(is((Object) mStudToShow)))).check(matches(isDisplayed()));
+        onView(withId(R.id.textView2)).check(matches(withText(mStudToShow)));
     }
 }

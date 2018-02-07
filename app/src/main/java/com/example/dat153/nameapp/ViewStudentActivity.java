@@ -53,7 +53,9 @@ public class ViewStudentActivity extends AppCompatActivity {
         }
         //User thisUser = mDb.userDao().loadUserByName(name);
         ImageView imageView = findViewById(R.id.imageView);
+
         imageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
+
         TextView textView = findViewById(R.id.textView2);
         textView.setText(name);
     }
@@ -83,10 +85,10 @@ public class ViewStudentActivity extends AppCompatActivity {
         /**
          * Loads all user from the database.
          */
-        public static class LoadUserByName extends AsyncTask<String, Void, User> {
+        private static class LoadUserByName extends AsyncTask<String, Void, User> {
             private final AppDatabase mDb;
 
-            public LoadUserByName(AppDatabase db) {
+            LoadUserByName(AppDatabase db) {
                 mDb = db;
             }
 

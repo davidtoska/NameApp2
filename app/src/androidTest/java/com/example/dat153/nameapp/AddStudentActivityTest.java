@@ -149,7 +149,7 @@ public class AddStudentActivityTest {
     /**
      * Grant permission to camera.
      */
-    private void addPermissionToCamera(){
+    private void addPermissionToCamera() {
         getInstrumentation().getUiAutomation().executeShellCommand(
                 "pm grant " + getTargetContext().getPackageName()
                         + " android.permission.CAMERA");
@@ -158,7 +158,7 @@ public class AddStudentActivityTest {
     /**
      * Revokes permission to camera.
      */
-    private void denyPermissionToCamera(){
+    private void denyPermissionToCamera() {
         getInstrumentation().getUiAutomation().executeShellCommand(
                 "pm revoke " + getTargetContext().getPackageName()
                         + " android.permission.CAMERA");
@@ -166,17 +166,19 @@ public class AddStudentActivityTest {
 
     /**
      * Constructs a default bitmap from ic_launcher icon.
+     *
      * @return
      */
-    private Bitmap getDefaultBitmap(){
+    private Bitmap getDefaultBitmap() {
         return BitmapFactory.decodeResource(getTargetContext().getResources(), R.mipmap.ic_launcher);
     }
 
     /**
      * Creates a dummy result for the camera scenario.
+     *
      * @return
      */
-    private Instrumentation.ActivityResult createResultCameraScenario(){
+    private Instrumentation.ActivityResult createResultCameraScenario() {
         Intent intent = new Intent();
         intent.putExtra("data", getDefaultBitmap());
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
@@ -185,12 +187,11 @@ public class AddStudentActivityTest {
 
     /**
      * Returns the concatenated String of firsName and lastName.
+     *
      * @return fullname
      */
-    private String getFullName(){
+    private String getFullName() {
         String fullName = mFirstName.concat(" " + mLastName);
         return fullName;
     }
-
-
 }

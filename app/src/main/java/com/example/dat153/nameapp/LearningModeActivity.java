@@ -24,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.example.dat153.nameapp.Database.AppDatabase;
-import com.example.dat153.nameapp.Database.LoadAllNamesTask;
-import com.example.dat153.nameapp.Database.LoadAllUsersTask;
 import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
@@ -70,7 +68,7 @@ public class LearningModeActivity extends AppCompatActivity {
 
         try {
             allStudents = new LearningModeActivity.GetStudentsTask(mDb).execute().get();
-            Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -101,7 +99,7 @@ public class LearningModeActivity extends AppCompatActivity {
     private static class GetStudentsTask extends AsyncTask<Void, Void, List<User>> {
         private final AppDatabase mDb;
 
-        public GetStudentsTask(AppDatabase db) {
+        GetStudentsTask(AppDatabase db) {
             mDb = db;
         }
 
@@ -125,7 +123,7 @@ public class LearningModeActivity extends AppCompatActivity {
     public void runGame(View view){
         if(!allStudents.isEmpty()){
             ImageView imageView = findViewById(R.id.imageView2);
-         
+
             fadeOut(imageView);
             enableSpinner();
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
@@ -231,7 +229,7 @@ public class LearningModeActivity extends AppCompatActivity {
      * Gets a random student from the list
      * @return random student
      */
-    public User getRandomStudent(){
+    public User fetchRandomStudent(){
         int randomIndex = mRandom.nextInt(allStudents.size());
         User rs = allStudents.get(randomIndex);
         // index that stores the later removal of the index if user guesses correctly
@@ -269,5 +267,13 @@ public class LearningModeActivity extends AppCompatActivity {
 
     public int getGameScore(){
         return gameScore;
+    }
+
+    public User getRandomStudent(){
+        return randomStudent;
+    }
+
+    public Spinner getSpinner(){
+        return spinner;
     }
 }

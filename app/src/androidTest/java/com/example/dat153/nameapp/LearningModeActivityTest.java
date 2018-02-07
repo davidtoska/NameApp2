@@ -1,10 +1,17 @@
 package com.example.dat153.nameapp;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.example.dat153.nameapp.Database.User;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +34,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 
+
 /**
  * Created by internal_cecilie on 30.01.2018.
  */
@@ -34,9 +42,6 @@ import static org.hamcrest.CoreMatchers.not;
 @SmallTest
 public class LearningModeActivityTest {
 
-    private String mSelectionText1;
-    private String mSelectionText2;
-    private String mSelectionText3;
     private Integer spinnerId;
 
     @Rule
@@ -45,9 +50,6 @@ public class LearningModeActivityTest {
 
     @Before
     public void before(){
-        mSelectionText1 = "Thomas Reite";
-        mSelectionText2 = "David Toska";
-        mSelectionText3 = "Cecilie Gjørøy";
         spinnerId = R.id.spinner;
     }
 
@@ -73,7 +75,7 @@ public class LearningModeActivityTest {
     @Test
     public void testCorrectNameSelected_spinner() throws NoMatchingViewException{
         onView(withId(spinnerId)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName().toString()))).perform(click());
         onView(withId(spinnerId)).check(matches(withSpinnerText(containsString(mActivityRule.getActivity().getRandomStudent().getName()))));
     }
 
@@ -84,20 +86,21 @@ public class LearningModeActivityTest {
     public void testWrongNameSelected_spinner() throws NoMatchingViewException{
         onView(withId(spinnerId)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(getWrongNameToGuess()))).perform(click());
-        onView(withText(mActivityRule.getActivity().getRandomStudent().getName())).check(matches(not(isDisplayed())));
+        onView(withId(spinnerId)).check(matches(not(withText(mActivityRule.getActivity().getRandomStudent().getName()))));
     }
 
     /**
      * Method to check that the color of the spinner is green when the user has correctly guessed the name of the student.
      */
     @Test
-    public void testColorCorrect_spinner() throws NoMatchingViewException{
-        final int corrAnswerBackground = R.color.green;
+    public void testColorCorrect_spinner() throws NoMatchingViewException, InterruptedException {
+        final int corrAnswerBackground = mActivityRule.getActivity().getResources().getColor(R.color.green);
 
         onView(withId(spinnerId)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
         onView(withId(R.id.button5)).perform(click());
-        onView(withId(spinnerId)).check(matches(hasBackground(corrAnswerBackground)));
+        int s = ((ColorDrawable)mActivityRule.getActivity().getSpinner().getBackground()).getColor();
+        assertEquals(s, corrAnswerBackground);
     }
 
     /**
@@ -105,23 +108,36 @@ public class LearningModeActivityTest {
      */
     @Test
     public void testScore_game() throws NoMatchingViewException{
+        List<String> list = new ArrayList<>(mActivityRule.getActivity().getAllStudentNames());
+        int listsize = list.size();
         assertEquals(mActivityRule.getActivity().getGameScore(), 0);
 
-        onView(withId(spinnerId)).perform(click());
+        onView(withId(R.id.spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
         onView(withId(R.id.button5)).perform(click()); // guess
         onView(withId(R.id.button6)).perform(click()); // next
 
-        onView(withId(spinnerId)).perform(click());
+        onView(withId(R.id.spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
-        onView(withId(R.id.button5)).perform(click());
-        onView(withId(R.id.button6)).perform(click());
+        onView(withId(R.id.button5)).perform(click()); // guess
+        onView(withId(R.id.button6)).perform(click()); // next
 
-        onView(withId(spinnerId)).perform(click());
+        onView(withId(R.id.spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
-        onView(withId(R.id.button5)).perform(click());
-        onView(withId(R.id.button6)).perform(click());
+        onView(withId(R.id.button5)).perform(click()); // guess
+        onView(withId(R.id.button6)).perform(click()); // next
 
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
+        onView(withId(R.id.button5)).perform(click()); // guess
+        onView(withId(R.id.button6)).perform(click()); // next
+
+        onView(withId(R.id.spinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
+        onView(withId(R.id.button5)).perform(click()); // guess
+        onView(withId(R.id.button6)).perform(click()); // next
+
+        onView(withId(R.id.textView4)).check(matches(withText(Integer.toString(listsize))));
         onView(withId(R.id.textView4)).check(matches(withText(Integer.toString(mActivityRule.getActivity().getGameScore()))));
     }
 
