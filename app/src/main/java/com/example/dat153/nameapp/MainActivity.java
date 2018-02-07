@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void listStudents(View view) {
-        Log.d("SE HER SE HER", "List student clicked");
-
         try {
             Intent intent = new Intent(this, ListStudentsActivity.class);
             startActivity(intent);
