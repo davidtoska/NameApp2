@@ -63,7 +63,6 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
 
         String name = sharedPreferences.getString(
                 String.valueOf(R.string.key_app_owner_name), null);
-
         return name;
     }
 

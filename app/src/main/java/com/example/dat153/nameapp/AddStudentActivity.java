@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -76,6 +77,8 @@ public class AddStudentActivity extends AppCompatActivity {
     // image path jpg
     private final String IMG_PATH_JPG = ".jpg";
 
+    private Uri imgURI;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +125,13 @@ public class AddStudentActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-
             File image = createFile();
             if (image != null) {
-                Uri imageURI = FileProvider.getUriForFile(this, "com.example.dat153.nameapp.fileprovider", image);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                imgURI = FileProvider.getUriForFile(this, "com.example.dat153.nameapp.fileprovider", image);
+                takePictureIntent.putExtra("return-data", true);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -143,7 +145,7 @@ public class AddStudentActivity extends AppCompatActivity {
         File fileDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = null;
         try{
-            image = File.createTempFile(fileName,/* suffix */ String.valueOf(fileDir)/* directory */);
+            image = File.createTempFile(fileName,/* suffix */ null,fileDir/* directory */);
             imgPath = image.getAbsolutePath();
         }
         catch(Exception e){
@@ -161,9 +163,8 @@ public class AddStudentActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            ImgURI = data.getData();
             try {
-                bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), ImgURI);
+                bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), imgURI);
                 ImgPreview.setImageBitmap(bitmapImage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -173,7 +174,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
         // If user wants to choose from gallery
         if(requestCode == CHOOSE_FROM_GALLERY && resultCode == RESULT_OK){
-            ImgURI = data.getData();
+            //ImgURI = data.getData();
             try {
                 bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), ImgURI);
                 ImgPreview.setImageBitmap(bitmapImage);
@@ -181,8 +182,20 @@ public class AddStudentActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.error_message, Toast.LENGTH_LONG).show();
             }
-            imgPath = ImgURI.getPath();
+            imgPath = getPathFromURI(data.getData());
         }
+    }
+
+    public String getPathFromURI(Uri contentUri) {
+        String res = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
     }
 
 

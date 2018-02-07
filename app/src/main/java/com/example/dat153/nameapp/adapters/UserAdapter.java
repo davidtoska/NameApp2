@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -20,8 +21,12 @@ import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.R;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.List;
+
+import static android.graphics.BitmapFactory.decodeFile;
 
 /**
  * Created by internal_david on 02.02.2018.
@@ -54,26 +59,32 @@ public class UserAdapter extends ArrayAdapter<User> {
         return listItemView;
     }
 
-    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
-        Bitmap thumbImage = null;
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE) {
         String pattern = "\\d*";
 
         Uri uri = Uri.parse(imgPath);
         Log.d("URI", uri.toString());
         Log.d("imgPath", imgPath.toString());
 
-        if(imgPath.matches(pattern)) {
-            int res = Integer.parseInt(imgPath);
-            BitmapDrawable temp = (BitmapDrawable) this.getContext().getApplicationContext().getResources().getDrawable(res);
-            Log.d("MAKING THUMBNAIL OF", uri.toString());
-            thumbImage = ThumbnailUtils.extractThumbnail(temp.getBitmap(), THUMBSIZE, THUMBSIZE);
-        }
-        else {
-            thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.toString()),
-                    THUMBSIZE, THUMBSIZE);
+        Bitmap thumbImage = null;
+        Drawable temp = null;
+        if (imgPath.contains("internal")) {
+            try {
+                InputStream inputStream = this.getContext().getApplicationContext().getContentResolver().openInputStream(Uri.parse(imgPath));
+                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (imgPath.contains("tmp")) {
+            try {
+                thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return thumbImage;
     }
-
 }
 

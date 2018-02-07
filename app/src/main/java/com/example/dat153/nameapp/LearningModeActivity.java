@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,11 +29,14 @@ import com.example.dat153.nameapp.Database.LoadAllUsersTask;
 import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import static android.graphics.BitmapFactory.decodeFile;
 import static android.transition.Fade.IN;
 
 /**
@@ -137,22 +141,24 @@ public class LearningModeActivity extends AppCompatActivity {
     }
 
     private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+
         Bitmap thumbImage = null;
-        String pattern = "\\d*";
-
-        Uri uri = Uri.parse(imgPath);
-        Log.d("URI", uri.toString());
-        Log.d("imgPath", imgPath.toString());
-
-        if(imgPath.matches(pattern)) {
-            int res = Integer.parseInt(imgPath);
-            BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
-            Log.d("MAKING THUMBNAIL OF", uri.toString());
-            thumbImage = ThumbnailUtils.extractThumbnail(temp.getBitmap(), THUMBSIZE, THUMBSIZE);
-        }
-        else {
-            thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(uri.toString()),
-                    THUMBSIZE, THUMBSIZE);
+        Drawable temp;
+        if (imgPath.contains("internal")) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
+                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (imgPath.contains("tmp")) {
+            try {
+                thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return thumbImage;
     }
