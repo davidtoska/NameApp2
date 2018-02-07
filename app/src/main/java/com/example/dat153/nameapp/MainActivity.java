@@ -18,13 +18,12 @@ import android.widget.Toast;
 import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.User;
 
-
 import static com.example.dat153.nameapp.validators.StringValidator.validName;
 
 /**
  * MAIN CLASS
  *
- * @author cecilie
+ * @author internal_cecilie
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -186,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            mDb.userDao().insertUser(new User("David Toska", String.valueOf(R.drawable.david)));
-            mDb.userDao().insertUser(new User("Thomas", String.valueOf(R.drawable.thomas)));
-            mDb.userDao().insertUser(new User("Cecilie", String.valueOf(R.drawable.cecilie)));
+            mDb.userDao().insertUser(new User("David Toska", "android.resource://com.example.dat153.nameapp/drawable/internal_david"));
+            mDb.userDao().insertUser(new User("Thomas", "android.resource://com.example.dat153.nameapp/drawable/internal_thomas"));
+            mDb.userDao().insertUser(new User("Cecilie", "android.resource://com.example.dat153.nameapp/drawable/internal_cecilie"));
 
             return null;
         }

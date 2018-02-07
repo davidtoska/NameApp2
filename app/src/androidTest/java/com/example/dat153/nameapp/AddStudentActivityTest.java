@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by cecilie on 31.01.2018.
+ * Created by internal_cecilie on 31.01.2018.
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest

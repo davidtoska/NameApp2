@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.not;
 
 
 /**
- * Created by cecilie on 30.01.2018.
+ * Created by internal_cecilie on 30.01.2018.
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest

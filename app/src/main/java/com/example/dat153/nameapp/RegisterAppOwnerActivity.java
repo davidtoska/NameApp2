@@ -67,11 +67,13 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         String ownersName = null;
         SharedPreferences sharedPreferences = this.getSharedPreferences(
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
+
         if(sharedPreferences != null){
             ownersName = sharedPreferences.getString(
                     String.valueOf(R.string.key_app_owner_name), null);
         }
         return ownersName;
+
     }
 
 }

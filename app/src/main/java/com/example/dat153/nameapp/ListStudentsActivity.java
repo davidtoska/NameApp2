@@ -31,9 +31,16 @@ public class ListStudentsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_students);
+     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Getting elements from the view.
+        Button b = findViewById(R.id.button4);
+        ListView listView = findViewById(R.id.student_name_listview);
 
         //Getting a list of all student names.
         mDb = AppDatabase.getPersistentDatabase(this.getApplicationContext());
@@ -53,19 +60,6 @@ public class ListStudentsActivity extends AppCompatActivity {
             adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, userNames);
         }
-     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //Getting elements from the view.
-        Button b = findViewById(R.id.button4);
-        ListView listView = findViewById(R.id.student_name_listview);
-
-        //Getting a list of all student names.
-        mDb = AppDatabase.getPersistentDatabase(this.getApplicationContext());
-        userNames = new ArrayList<>();
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -28,8 +28,8 @@ public final class DatabaseInitializer {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            mDb.userDao().insertUser(new User("David Toska", String.valueOf(R.drawable.david)));
-            mDb.userDao().insertUser(new User("Thomas", String.valueOf(R.drawable.thomas)));
+            mDb.userDao().insertUser(new User("David Toska", String.valueOf(R.drawable.internal_david)));
+            mDb.userDao().insertUser(new User("Thomas", String.valueOf(R.drawable.internal_thomas)));
             mDb.userDao().insertUser(new User("Cecilie", String.valueOf(R.drawable.cecilie)));
 
             return null;

@@ -6,6 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,16 +27,19 @@ import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
+import static android.graphics.BitmapFactory.decodeFile;
 import static android.transition.Fade.IN;
 
 /**
  * Class that runs the learning game.
- * @author cecilie
+ * @author internal_cecilie
  */
 
 public class LearningModeActivity extends AppCompatActivity {
@@ -121,8 +127,8 @@ public class LearningModeActivity extends AppCompatActivity {
             fadeOut(imageView);
             enableSpinner();
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
-            randomStudent = fetchRandomStudent();
-            imageView.setImageBitmap(decodeImage(randomStudent.getImgName()));
+            randomStudent = getRandomStudent();
+            imageView.setImageBitmap(decodeImage(randomStudent.getImgPath(), 1000));
             fadeIn(imageView);
 
         } else {
@@ -132,23 +138,27 @@ public class LearningModeActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
     }
 
-    public Bitmap decodeImage(String ImgName){
-        Bitmap bitmap;
-        String pattern = "\\d*";
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
 
-        if(ImgName.matches(pattern)){
-            // Image is in resources
-            Log.d("SE HER SE HER", "ImgName: " + ImgName);
-            int res = Integer.parseInt(ImgName);
-            Log.d("SE HER SE HER", "int: " + res);
-            BitmapDrawable temp = (BitmapDrawable) this.getApplicationContext().getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
+        Bitmap thumbImage = null;
+        Drawable temp;
+        if (imgPath.contains("internal")) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
+                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (imgPath.contains("tmp")) {
+            try {
+                thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        else{
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
-        }
-        return bitmap;
+        return thumbImage;
     }
 
     /**

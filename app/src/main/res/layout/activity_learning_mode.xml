@@ -95,7 +95,7 @@
             android:contentDescription="@string/image_description"
             android:gravity="center"
                    
-            app:srcCompat="@drawable/thomas"
+            app:srcCompat="@drawable/internal_thomas"
             tools:layout_editor_absoluteX="300dp"
             tools:layout_editor_absoluteY="257dp" />
 

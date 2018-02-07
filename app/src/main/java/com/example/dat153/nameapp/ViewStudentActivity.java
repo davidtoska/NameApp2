@@ -5,8 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +22,9 @@ import com.example.dat153.nameapp.Database.AppDatabase;
 import com.example.dat153.nameapp.Database.User;
 import com.example.dat153.nameapp.util.ApplicationUtils;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -46,26 +53,33 @@ public class ViewStudentActivity extends AppCompatActivity {
         }
         //User thisUser = mDb.userDao().loadUserByName(name);
         ImageView imageView = findViewById(R.id.imageView);
-        imageView.setImageBitmap(decodeImage(thisUser.getImgName()));
-        imageView.setTag(name);
+
+        imageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
+
         TextView textView = findViewById(R.id.textView2);
         textView.setText(name);
     }
 
-    public Bitmap decodeImage(String ImgName) {
-        Bitmap bitmap;
-        String pattern = "\\d*";
-
-        if (ImgName.matches(pattern)) {
-            // Image is in resources
-            int res = Integer.parseInt(ImgName);
-            BitmapDrawable temp = (BitmapDrawable) getResources().getDrawable(res);
-            bitmap = temp.getBitmap();
-        } else {
-            // Image is store in internal storage
-            bitmap = BitmapFactory.decodeFile(ImgName);
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+        Bitmap thumbImage = null;
+        Drawable temp = null;
+        if(imgPath.contains("internal")){
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
+                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if(imgPath.contains("tmp")) {
+            try {
+                thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return bitmap;
+        return thumbImage;
     }
 
         /**
@@ -89,4 +103,4 @@ public class ViewStudentActivity extends AppCompatActivity {
                 return user;
             }
         }
-    }
+}
