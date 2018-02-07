@@ -34,6 +34,8 @@ import static android.graphics.BitmapFactory.decodeFile;
 
 public class UserAdapter extends ArrayAdapter<User> {
 
+    private final String TAG = "UserAdapter";
+
     public UserAdapter(@NonNull Context context,
                        @NonNull List<User> objects) {
             super(context, 0, objects);
@@ -60,11 +62,8 @@ public class UserAdapter extends ArrayAdapter<User> {
     }
 
     private Bitmap decodeImage(String imgPath, final int THUMBSIZE) {
-        String pattern = "\\d*";
 
         Uri uri = Uri.parse(imgPath);
-        Log.d("URI", uri.toString());
-        Log.d("imgPath", imgPath.toString());
 
         Bitmap thumbImage = null;
         Drawable temp = null;
