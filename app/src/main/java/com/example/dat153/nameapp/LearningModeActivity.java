@@ -44,6 +44,8 @@ import static android.transition.Fade.IN;
 
 public class LearningModeActivity extends AppCompatActivity {
 
+    private final String TAG = "LearningModeA";
+
     private final Random mRandom = new Random();
     private List<User> allStudents;
     private List<String> allStudentNames;
@@ -68,7 +70,6 @@ public class LearningModeActivity extends AppCompatActivity {
 
         try {
             allStudents = new LearningModeActivity.GetStudentsTask(mDb).execute().get();
-            // Toast.makeText(this, "Student loaded", Toast.LENGTH_LONG).show();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -76,6 +77,9 @@ public class LearningModeActivity extends AppCompatActivity {
         }
 
         allStudentNames = ApplicationUtils.getStudentNames(allStudents);
+
+        Log.d(TAG, "all student names " + allStudentNames.toString());
+        Log.d(TAG, " all students " + allStudents.toString());
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, allStudentNames);
         gameScore = 0;
@@ -127,7 +131,8 @@ public class LearningModeActivity extends AppCompatActivity {
             fadeOut(imageView);
             enableSpinner();
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
-            randomStudent = getRandomStudent();
+            randomStudent = fetchRandomStudent();
+            Log.d(TAG, " runGame: randomstudent " + randomStudent);
             imageView.setImageBitmap(decodeImage(randomStudent.getImgPath(), 1000));
             fadeIn(imageView);
 
@@ -139,10 +144,11 @@ public class LearningModeActivity extends AppCompatActivity {
     }
 
     private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
-
+        Log.d(TAG, " internal: " + imgPath);
         Bitmap thumbImage = null;
         Drawable temp;
         if (imgPath.contains("internal")) {
+            Log.d(TAG, " internal: " + imgPath);
             try {
                 InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
                 temp = BitmapDrawable.createFromStream(inputStream, imgPath);
@@ -152,6 +158,7 @@ public class LearningModeActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else if (imgPath.contains("tmp")) {
+            Log.d(TAG, "tmp " + imgPath);
             try {
                 thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
             } catch (Exception e) {
@@ -270,6 +277,7 @@ public class LearningModeActivity extends AppCompatActivity {
     }
 
     public User getRandomStudent(){
+        User randomUser = new User();
         return randomStudent;
     }
 
