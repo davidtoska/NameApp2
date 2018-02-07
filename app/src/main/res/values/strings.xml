@@ -30,6 +30,7 @@
 
     <!-- Shared Preferences keys -->
     <string name="key_app_owner_name">key_app_owner_name</string>
+    <string name="key_app_owner_img_path">key_app_owner_img_path</string>
 
     <!-- Registrer app owner -->
     <string name="default_value_app_owner_name">John Doe</string>
@@ -54,7 +55,7 @@
     <string name="button">Button</string>
     <string name="edit_textview_description">This is an editText</string>
     <string name="mandatory_field">Mandatory field</string>
-    <string name="add_name">Add owner</string>
+    <string name="add_name">Save owner</string>
     <string name="name_not_valid">Enter a valid name</string>
 
     <!-- help section -->

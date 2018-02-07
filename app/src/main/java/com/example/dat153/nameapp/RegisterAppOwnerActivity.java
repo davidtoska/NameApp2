@@ -7,6 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,7 +27,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -31,8 +37,6 @@ import static com.example.dat153.nameapp.validators.StringValidator.validName;
 
 
 public class RegisterAppOwnerActivity extends AppCompatActivity {
-
-
 
 
     private final String TAG = "RegAppOwner";
@@ -55,7 +59,7 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
     private String imgPath;
 
     // imgage path
-    private final String IMG_PATH= "NameApp_";
+    private final String IMG_PATH = "NameApp_";
 
     // image path jpg
     private final String IMG_PATH_JPG = ".jpg";
@@ -75,7 +79,7 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         CheckCameraPermission();
     }
 
-    public void init(){
+    public void init() {
         Button addNameButton = findViewById(R.id.AddAppOwnerButton);
         ImgPreviewOwner = findViewById(R.id.ImgPreviewOwner);
         addNameButton.setOnClickListener(new View.OnClickListener() {
@@ -88,24 +92,59 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
 
         //Get name of owner if excists (null otherwise)
         String name = getOwnersName();
-        if(name != null){
+        if (name != null) {
             EditText editText = findViewById(R.id.ownerNameEditTextField);
-            if(editText != null && validName(name)){
+            if (editText != null && validName(name)) {
                 editText.setText(name);
+            }
+        }
+
+        String ownerImgPath = this.getImgPathFromSharedPrefrences();
+        if (ownerImgPath != null) {
+            if (ImgPreviewOwner != null) {
+                Log.d(TAG, "init: " + ownerImgPath);
+                ImgPreviewOwner.setImageBitmap(decodeImage(ownerImgPath, 256));
             }
         }
     }
 
-    public void storeOwner(View view){
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE) {
+        Bitmap thumbImage = null;
+        Drawable temp = null;
+        if (imgPath.contains("internal")) {
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
+                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (imgPath.contains("tmp")) {
+            try {
+                thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return thumbImage;
+    }
+
+    public void storeOwner(View view) {
         EditText ownerNameEditTextField = findViewById(R.id.ownerNameEditTextField);
 
         String ownersName = ownerNameEditTextField.getText().toString();
         SharedPreferences sharedPreferences = this.getSharedPreferences(
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
-        Log.d(TAG, " : " + ownersName);
-        Log.d(TAG, "AppOwner uri: " + imgPath);
+
+        //Store imgpath and name of owner.
+        if (imgPath != null) {
+            sharedPreferences.edit().putString(String.valueOf(R.string.key_app_owner_img_path), imgPath).apply();
+        }
+
 
         sharedPreferences.edit().putString(String.valueOf(R.string.key_app_owner_name), ownersName).apply();
+
         Toast.makeText(this, getResources().getString(R.string.name_saved), Toast.LENGTH_LONG).show();
     }
 
@@ -113,18 +152,30 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
     /**
      * Retrives the owners name from shared preferences if registered.
      * Null othervise.
+     *
      * @return String og null.
      */
-    public String getOwnersName(){
+    public String getOwnersName() {
         String ownersName = null;
         SharedPreferences sharedPreferences = this.getSharedPreferences(
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
 
-        if(sharedPreferences != null){
+        if (sharedPreferences != null) {
             ownersName = sharedPreferences.getString(
                     String.valueOf(R.string.key_app_owner_name), null);
         }
         return ownersName;
+    }
+
+    public String getImgPathFromSharedPrefrences() {
+        String imgPath = null;
+        SharedPreferences sharedPreferences = this.getSharedPreferences(
+                "com.example.dat153.nameapp", Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            imgPath = sharedPreferences.getString(
+                    String.valueOf(R.string.key_app_owner_img_path), null);
+        }
+        return imgPath;
     }
 
     /**
@@ -137,8 +188,7 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             // Takes the picture
             dispatchTakePictureIntent();
-        }
-        else{
+        } else {
             // Permission is missing and must be requested.
             requestCameraPermission();
         }
@@ -187,20 +237,20 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
 
     /**
      * Metod creating the image file
+     *
      * @return
      */
-    public File createFile(){
+    public File createFile() {
         Log.d(TAG, "createFile");
         String fileName = GeneretePictureName();
 
         File fileDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = null;
-        try{
-            image = File.createTempFile(fileName,/* suffix */ null,fileDir/* directory */);
+        try {
+            image = File.createTempFile(fileName,/* suffix */ null, fileDir/* directory */);
             imgPath = image.getAbsolutePath();
             Log.d(TAG, imgPath);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.d("IOerror", "File not created");
         }
         return image;
@@ -221,8 +271,8 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
 
     /**
      * @param requestCode int representing what type of request
-     * @param resultCode int representing if all went okey
-     * @param data the data we asked for
+     * @param resultCode  int representing if all went okey
+     * @param data        the data we asked for
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -231,9 +281,6 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
                 bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), imgURI);
-                Log.d(TAG, bitmapImage.toString());
-                Log.d(TAG, "imgPreOw: " + ImgPreviewOwner.toString());
-                Log.d(TAG, ImgPreviewOwner.toString());
                 ImgPreviewOwner.setImageBitmap(bitmapImage);
             } catch (IOException e) {
                 e.printStackTrace();

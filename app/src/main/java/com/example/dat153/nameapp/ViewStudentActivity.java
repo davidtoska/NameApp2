@@ -60,10 +60,10 @@ public class ViewStudentActivity extends AppCompatActivity {
         textView.setText(name);
     }
 
-    private Bitmap decodeImage(String imgPath, final int THUMBSIZE){
+    private Bitmap decodeImage(String imgPath, final int THUMBSIZE) {
         Bitmap thumbImage = null;
         Drawable temp = null;
-        if(imgPath.contains("internal")){
+        if (imgPath.contains("internal")) {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(Uri.parse(imgPath));
                 temp = BitmapDrawable.createFromStream(inputStream, imgPath);
@@ -72,7 +72,7 @@ public class ViewStudentActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        } else if(imgPath.contains("tmp")) {
+        } else if (imgPath.contains("tmp")) {
             try {
                 thumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
             } catch (Exception e) {
@@ -82,25 +82,25 @@ public class ViewStudentActivity extends AppCompatActivity {
         return thumbImage;
     }
 
-        /**
-         * Loads all user from the database.
-         */
-        private static class LoadUserByName extends AsyncTask<String, Void, User> {
-            private final AppDatabase mDb;
+    /**
+     * Loads all user from the database.
+     */
+    private static class LoadUserByName extends AsyncTask<String, Void, User> {
+        private final AppDatabase mDb;
 
-            LoadUserByName(AppDatabase db) {
-                mDb = db;
-            }
-
-            @Override
-            protected User doInBackground(String... strings) {
-                User user = new User();
-                if (strings.length != 0) {
-                    user = mDb.userDao().loadUserByName(strings[0]);
-                }
-
-                Log.d("doinbackground: ", "users: " + user.getName());
-                return user;
-            }
+        LoadUserByName(AppDatabase db) {
+            mDb = db;
         }
+
+        @Override
+        protected User doInBackground(String... strings) {
+            User user = new User();
+            if (strings.length != 0) {
+                user = mDb.userDao().loadUserByName(strings[0]);
+            }
+
+            Log.d("doinbackground: ", "users: " + user.getName());
+            return user;
+        }
+    }
 }
