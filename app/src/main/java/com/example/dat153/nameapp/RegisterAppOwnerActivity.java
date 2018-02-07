@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
@@ -103,9 +104,11 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
                 "com.example.dat153.nameapp", Context.MODE_PRIVATE);
         Log.d(TAG, " : " + ownersName);
         Log.d(TAG, "AppOwner uri: " + imgPath);
+
         sharedPreferences.edit().putString(String.valueOf(R.string.key_app_owner_name), ownersName).apply();
         Toast.makeText(this, getResources().getString(R.string.name_saved), Toast.LENGTH_LONG).show();
     }
+
 
     /**
      * Retrives the owners name from shared preferences if registered.
@@ -195,6 +198,7 @@ public class RegisterAppOwnerActivity extends AppCompatActivity {
         try{
             image = File.createTempFile(fileName,/* suffix */ null,fileDir/* directory */);
             imgPath = image.getAbsolutePath();
+            Log.d(TAG, imgPath);
         }
         catch(Exception e){
             Log.d("IOerror", "File not created");
