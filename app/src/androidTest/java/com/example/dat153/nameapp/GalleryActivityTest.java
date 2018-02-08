@@ -48,7 +48,7 @@ public class GalleryActivityTest {
     @Test
     public void testAddedStudentScenario() throws NullPointerException, InterruptedException {
 
-        assertEquals(mActivityRule.getActivity().getAdapter().getCount(), 5);
+        assertEquals(mActivityRule.getActivity().getAdapter().getCount(), 4);
 
         mActivityRule.getActivity().finish();
     }

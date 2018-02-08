@@ -132,11 +132,6 @@ public class LearningModeActivityTest {
         onView(withId(R.id.button5)).perform(click()); // guess
         onView(withId(R.id.button6)).perform(click()); // next
 
-        onView(withId(R.id.spinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(mActivityRule.getActivity().getRandomStudent().getName()))).perform(click());
-        onView(withId(R.id.button5)).perform(click()); // guess
-        onView(withId(R.id.button6)).perform(click()); // next
-
         onView(withId(R.id.textView4)).check(matches(withText(Integer.toString(listsize))));
         onView(withId(R.id.textView4)).check(matches(withText(Integer.toString(mActivityRule.getActivity().getGameScore()))));
     }
