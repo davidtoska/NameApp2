@@ -133,8 +133,10 @@ public class LearningModeActivity extends AppCompatActivity {
             spinner.setBackgroundColor(getResources().getColor(R.color.primary_material_light_1));
             randomStudent = fetchRandomStudent();
             Log.d(TAG, " runGame: randomstudent " + randomStudent);
-            imageView.setImageBitmap(decodeImage(randomStudent.getImgPath(), 1000));
-            fadeIn(imageView);
+            if(randomStudent.getImgPath() != null) {
+                imageView.setImageBitmap(decodeImage(randomStudent.getImgPath(), 1000));
+                fadeIn(imageView);
+            }
 
         } else {
             quit();

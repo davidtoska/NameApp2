@@ -62,25 +62,24 @@ public class UserAdapter extends ArrayAdapter<User> {
     }
 
     private Bitmap decodeImage(String imgPath, final int THUMBSIZE) {
-
-        Uri uri = Uri.parse(imgPath);
-
         Bitmap thumbImage = null;
         Drawable temp = null;
-        if (imgPath.contains("internal")) {
-            try {
-                InputStream inputStream = this.getContext().getApplicationContext().getContentResolver().openInputStream(Uri.parse(imgPath));
-                temp = BitmapDrawable.createFromStream(inputStream, imgPath);
-                Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
-                thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        } else if (imgPath.contains("tmp")) {
-            try {
-                thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if(imgPath != null){
+            if (imgPath.contains("internal")) {
+                try {
+                    InputStream inputStream = this.getContext().getApplicationContext().getContentResolver().openInputStream(Uri.parse(imgPath));
+                    temp = BitmapDrawable.createFromStream(inputStream, imgPath);
+                    Bitmap bitmap = ((BitmapDrawable) temp).getBitmap();
+                    thumbImage = ThumbnailUtils.extractThumbnail(bitmap, THUMBSIZE, THUMBSIZE);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if (imgPath.contains("tmp")) {
+                try {
+                    thumbImage = ThumbnailUtils.extractThumbnail(decodeFile(imgPath), THUMBSIZE, THUMBSIZE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return thumbImage;
