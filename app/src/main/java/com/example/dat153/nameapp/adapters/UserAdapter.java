@@ -55,6 +55,7 @@ public class UserAdapter extends ArrayAdapter<User> {
         ImageView userImageView = listItemView.findViewById(R.id.student_image);
         if(thisUser != null){
             userImageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
+            userImageView.setTag(thisUser.getName());
             userNameTextView.setText(thisUser.getName());
         }
 

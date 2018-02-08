@@ -44,7 +44,7 @@ public class ListStudentsActivityTest {
 
     @Before
     public void before(){
-        mStudToShow = "Thomas Reite";
+        mStudToShow = "David Toska";
     }
 
     @Test

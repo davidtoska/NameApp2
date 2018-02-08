@@ -69,7 +69,7 @@ public class AddStudentActivityTest {
         mDb = AppDatabase.getPersistentDatabase(mActivityRule.getActivity().getApplicationContext());
         mFirstName = "Ola";
         mLastName = "Nordmann";
-        //mActivityRule.getActivity().setBitmapImage(getDefaultBitmap());
+        mActivityRule.getActivity().setImgPath("android.resource://com.example.dat153.nameapp/drawable/internal_cecilie");
     }
 
     @Test
@@ -93,28 +93,14 @@ public class AddStudentActivityTest {
         onView(withId(R.id.inputLastName)).perform(typeText(mLastName));
         closeSoftKeyboard();
 
-        //onView(withId(R.id.AddButton)).perform(click());
+        //mActivityRule.getActivity().addStudentToDB(getFullName());
+        onView(withId(R.id.AddButton)).perform(click());
         // TODO: should add method to check that the correct image is displayed
         mActivityRule.getActivity().finish();
     }
 
     @Test
     public void testStudentAddedExistsInDB() throws UiObjectNotFoundException, ExecutionException, InterruptedException {
-        onView(withId(R.id.inputFirstName)).perform(clearText());
-        onView(withId(R.id.inputFirstName)).perform(typeText(mFirstName));
-        closeSoftKeyboard();
-        onView(withId(R.id.inputLastName)).perform(clearText());
-        onView(withId(R.id.inputLastName)).perform(typeText(mLastName));
-        closeSoftKeyboard();
-
-        mActivityRule.getActivity().addStudentToDB(getFullName());
-        onView(withId(R.id.AddButton)).perform(click());
-
-        /**
-         * TODO:
-         * add method to find the student in the DB and check whether the name and the image resource is what it's said to be
-         * use getFullName() and the default BitMap (should be uri?)
-         */
         List<String> userNames = new LoadAllNamesTask(mDb).execute().get();
         assertTrue(userNames.contains(getFullName()));
         mActivityRule.getActivity().finish();

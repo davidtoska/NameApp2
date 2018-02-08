@@ -55,7 +55,7 @@ public class ViewStudentActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageView);
 
         imageView.setImageBitmap(decodeImage(thisUser.getImgPath(), 256));
-
+        imageView.setTag(thisUser.getName());
         TextView textView = findViewById(R.id.textView2);
         textView.setText(name);
     }
